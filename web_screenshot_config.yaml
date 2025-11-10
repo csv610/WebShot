@@ -1,0 +1,51 @@
+# WebScreenShot Configuration File
+# All timeout values are in milliseconds unless otherwise specified
+
+# Browser settings
+browser:
+  headless: true
+
+# Timeout settings
+timeouts:
+  navigation_timeout: 60000  # Time to wait for page navigation (ms)
+  action_timeout: 60000      # Time to wait for page actions (ms)
+  final_wait: 5000          # Final wait after network idle (ms)
+
+# Scroll settings
+scroll:
+  delay: 1.0  # Delay between scroll actions in seconds
+
+# Viewport settings
+viewport:
+  # Set to null to use browser defaults
+  # Set specific values to override
+  width: null
+  height: null
+
+  # Auto-adjust viewport to capture entire page in single screenshot
+  # When enabled, viewport dimensions will be set to match page dimensions
+  auto_adjust: false
+
+  # Maximum dimensions when auto_adjust is enabled (safety limits)
+  max_width: 7680   # 8K width
+  max_height: 43200  # Prevents extremely tall pages from crashing
+
+# Output settings
+output:
+  # Default output directory (null = current directory)
+  directory: null
+
+  # Default filename pattern (supports strftime formatting)
+  # Available variables: {url}, {timestamp}, {domain}
+  filename_pattern: "screenshot_{timestamp}.png"
+
+  # Image format (png, jpeg)
+  format: "png"
+
+  # Quality (1-100, only for jpeg)
+  quality: 90
+
+# Logging settings
+logging:
+  verbose: false
+  level: "WARNING"  # DEBUG, INFO, WARNING, ERROR, CRITICAL

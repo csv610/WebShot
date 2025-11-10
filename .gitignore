@@ -1,0 +1,53 @@
+# Virtual Environment
+webenv/
+venv/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test outputs
+test_*.png
+debug_test.png
+cli_*.png
+test_*_*/
+screenshot_*.png
+blank.png
+screenshots_*/
+
+# Playwright
+.cache/
+ms-playwright/
+
+# Logs
+*.log
