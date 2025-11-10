@@ -284,19 +284,26 @@ class WebScreenShot:
         """
         Capture multiple pages of a webpage as separate PNG files.
         Each page is captured in viewport-sized chunks (no auto-adjust).
+        All output is saved to the 'screenshots' directory.
 
         Args:
             url: URL of the webpage to capture
-            output_dir: Directory where screenshots will be saved.
-                       If None, defaults to current directory.
+            output_dir: Subdirectory within 'screenshots/' where files will be saved.
+                       If None, files are saved directly to 'screenshots/' with timestamp in filename.
 
         Returns:
             True if capture was successful, False if URL was invalid (blank image created)
         """
-        # Generate default directory with timestamp if not provided
+        # Ensure output goes to screenshots directory
+        base_dir = Path("screenshots")
+
         if output_dir is None:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            output_dir = f"screenshots_{timestamp}"
+            timestamp = datetime.now().strftime("%d%m%Y_%H.%M.%S")
+            output_dir = str(base_dir)
+            use_timestamp = True
+        else:
+            output_dir = str(base_dir / output_dir)
+            use_timestamp = False
 
         # Create output directory
         try:
@@ -308,7 +315,9 @@ class WebScreenShot:
         # Validate URL
         if not self._is_valid_url(url):
             self.logger.warning(f"Invalid URL provided: {url}. Creating blank image.")
-            self._create_blank_image(str(Path(output_dir) / "page_1.png"))
+            timestamp = datetime.now().strftime("%d%m%Y_%H.%M.%S")
+            blank_path = str(Path(output_dir) / f"page_1_{timestamp}.png")
+            self._create_blank_image(blank_path)
             return False
 
         page = None
@@ -336,6 +345,8 @@ class WebScreenShot:
             num_pages = (total_height + viewport_height - 1) // viewport_height
             self.logger.info(f"Capturing {num_pages} page(s)...")
 
+            timestamp = datetime.now().strftime("%d%m%Y_%H.%M.%S") if use_timestamp else ""
+
             # Capture each page
             for page_num in range(num_pages):
                 # Add delay between page captures to avoid rate limiting
@@ -353,7 +364,10 @@ class WebScreenShot:
                 page.wait_for_timeout(self.final_wait)
 
                 # Capture screenshot
-                output_path = str(Path(output_dir) / f"page_{page_num + 1}.png")
+                if use_timestamp:
+                    output_path = str(Path(output_dir) / f"page_{page_num + 1}_{timestamp}.png")
+                else:
+                    output_path = str(Path(output_dir) / f"page_{page_num + 1}.png")
                 self.logger.info(f"Capturing page {page_num + 1}/{num_pages} to {output_path}...")
                 page.screenshot(path=output_path)
 
@@ -371,10 +385,11 @@ class WebScreenShot:
     def capture(self, url: str, output_path: Optional[str] = None, auto_adjust: Optional[bool] = None) -> bool:
         """
         Capture a full-page screenshot of the given URL.
+        All output is saved to the 'screenshots' directory.
 
         Args:
             url: URL of the webpage to capture
-            output_path: Path where the screenshot will be saved.
+            output_path: Relative path within 'screenshots/' where the screenshot will be saved.
                         If None, defaults to "screenshot_YYYYMMDD_HHMMSS.png"
             auto_adjust: Override the viewport_auto_adjust setting for this capture.
                         If None, uses the instance setting.
@@ -382,15 +397,22 @@ class WebScreenShot:
         Returns:
             True if screenshot was successful, False if URL was invalid (blank image created)
         """
+        # Ensure output goes to screenshots directory
+        base_dir = Path("screenshots")
+
         # Generate default filename with timestamp if not provided
         if output_path is None:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            timestamp = datetime.now().strftime("%d%m%Y_%H.%M.%S")
             output_path = f"screenshot_{timestamp}.png"
+
+        # Ensure path is within screenshots directory
+        full_path = base_dir / output_path
+        full_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Validate URL
         if not self._is_valid_url(url):
             self.logger.warning(f"Invalid URL provided: {url}. Creating blank image.")
-            self._create_blank_image(output_path)
+            self._create_blank_image(str(full_path))
             return False
 
         # Determine if we should auto-adjust viewport
@@ -422,13 +444,13 @@ class WebScreenShot:
             page.wait_for_timeout(self.final_wait)
 
             # Take screenshot
-            self.logger.info(f"Capturing screenshot to {output_path}...")
+            self.logger.info(f"Capturing screenshot to {full_path}...")
             if use_auto_adjust:
                 # With auto-adjust, we don't need full_page=True since viewport matches page
-                page.screenshot(path=output_path)
+                page.screenshot(path=str(full_path))
             else:
                 # Traditional full-page screenshot
-                page.screenshot(path=output_path, full_page=True)
+                page.screenshot(path=str(full_path), full_page=True)
             self.logger.info("Screenshot captured successfully")
 
             return True
@@ -436,7 +458,7 @@ class WebScreenShot:
         except Exception as e:
             self.logger.error(f"Error capturing screenshot: {e}")
             self.logger.warning("Creating blank image due to error")
-            self._create_blank_image(output_path)
+            self._create_blank_image(str(full_path))
             return False
 
         finally:
@@ -674,7 +696,7 @@ Examples:
     )
 
     parser.add_argument('--url', '-u', required=True, help='URL of the webpage to capture')
-    parser.add_argument('--output', '-o', help='Output path/directory for screenshot(s)')
+    parser.add_argument('--output', '-o', help='Output filename/subdirectory within screenshots/ directory')
     parser.add_argument('--full-page', '-f', action='store_true',
                         help='Capture entire webpage in one screenshot by auto-adjusting viewport')
     parser.add_argument('--multi-page', '-m', action='store_true',
@@ -694,7 +716,7 @@ Examples:
             # Capture multiple pages
             success = shot.capture_multiple_pages(args.url, args.output)
             if success:
-                final_path = args.output if args.output else 'screenshots_<timestamp>'
+                final_path = f"screenshots/{args.output}" if args.output else 'screenshots/<timestamp>'
                 print(f"Screenshots saved to {final_path}")
             else:
                 print(f"Failed to capture multiple pages")
@@ -703,18 +725,19 @@ Examples:
             shot.config = ScreenShotConfig(viewport_auto_adjust=True)
             success = shot.capture(args.url, args.output)
             if success:
-                final_path = args.output if args.output else 'screenshot_<timestamp>.png'
+                final_path = f"screenshots/{args.output}" if args.output else 'screenshots/screenshot_<timestamp>.png'
                 print(f"Screenshot saved to {final_path}")
             else:
+                final_path = f"screenshots/{args.output}" if args.output else 'screenshots/screenshot_<timestamp>.png'
                 print(f"Invalid URL. Blank image saved to {final_path}")
         else:
             # Default: single viewport screenshot
             success = shot.capture(args.url, args.output)
             if success:
-                final_path = args.output if args.output else 'screenshot_<timestamp>.png'
+                final_path = f"screenshots/{args.output}" if args.output else 'screenshots/screenshot_<timestamp>.png'
                 print(f"Screenshot saved to {final_path}")
             else:
-                final_path = args.output if args.output else 'screenshot_<timestamp>.png'
+                final_path = f"screenshots/{args.output}" if args.output else 'screenshots/screenshot_<timestamp>.png'
                 print(f"Invalid URL. Blank image saved to {final_path}")
     except Exception as e:
         print(f"Error: {e}")

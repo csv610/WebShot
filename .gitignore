@@ -45,6 +45,9 @@ screenshot_*.png
 blank.png
 screenshots_*/
 
+# Screenshots output directory
+screenshots/
+
 # Playwright
 .cache/
 ms-playwright/
