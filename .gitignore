@@ -51,3 +51,7 @@ ms-playwright/
 
 # Logs
 *.log
+
+# Test outputs and config examples
+cli_*_pages/
+web_screenshot_config_example.yaml

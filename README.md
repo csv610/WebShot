@@ -1,40 +1,16 @@
-# WebScreenShot Documentation
+# WebScreenShot
 
-WebScreenShot is a powerful tool for capturing full-page screenshots of websites using Playwright.
+A powerful tool for capturing full-page screenshots of websites using Playwright.
 
-## 📚 Documentation Structure
+## 📚 Documentation
 
-### 1. **[QUICKSTART.md](QUICKSTART.md)** - Start Here! ⚡
-- Get started in 5 minutes
-- Basic usage examples
-- Common use cases
-- Quick troubleshooting
-- **Best for:** First-time users
-
-### 2. **[INSTALLATION.md](INSTALLATION.md)** - Setup Guide 🔧
-- System requirements
-- Step-by-step installation
-- Platform-specific instructions (macOS, Linux, Windows)
-- Verification and testing
-- Detailed troubleshooting
-- **Best for:** Setting up the tool
-
-### 3. **[WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md)** - Full Documentation 📖
-- Complete features overview
-- API reference
-- Configuration file options
-- Advanced usage examples
-- Performance tips
-- Changelog
-- **Best for:** Detailed usage and configuration
-
-### 4. **[UPDATES.md](UPDATES.md)** - What's New 📝
-- Recent fixes and improvements
-- Files updated
-- Test results
-- Known issues fixed
-- Breaking changes (if any)
-- **Best for:** Understanding recent changes
+| Document | Purpose | Best For |
+|----------|---------|----------|
+| **[QUICKSTART.md](docs/QUICKSTART.md)** ⚡ | 5-minute setup | First-time users |
+| **[INSTALLATION.md](docs/INSTALLATION.md)** 🔧 | Detailed setup guide | Installation help |
+| **[WEB_SCREENSHOT_README.md](docs/WEB_SCREENSHOT_README.md)** 📖 | Full feature reference | Complete documentation |
+| **[UPDATES.md](docs/UPDATES.md)** 📝 | Recent changes | What's new |
+| **[QUALITY_REPORT.md](docs/QUALITY_REPORT.md)** 📊 | Code quality audit | Repository quality |
 
 ## 🚀 Quick Start
 
@@ -58,19 +34,23 @@ with WebScreenShot() as shot:
     shot.capture("https://example.com", "screenshot.png")
 ```
 
-## 📋 Files Overview
+## 📁 Repository Structure
 
-| File | Purpose | Last Updated |
-|------|---------|--------------|
-| `web_screenshot.py` | Main tool | Nov 2024 |
-| `web_screenshot_example.py` | Usage examples | Nov 2024 |
-| `web_screenshot_config.yaml` | Config template | Nov 2024 |
-| `requirements.txt` | Dependencies | Nov 2024 |
-| **QUICKSTART.md** | 5-minute setup | Nov 2024 |
-| **INSTALLATION.md** | Detailed setup | Nov 2024 |
-| **WEB_SCREENSHOT_README.md** | Full reference | Nov 2024 |
-| **UPDATES.md** | Recent changes | Nov 2024 |
-| **README.md** | This file | Nov 2024 |
+```
+WebShot/
+├── web_screenshot.py          # Main tool implementation
+├── web_screenshot_example.py  # Usage examples
+├── web_screenshot_config.yaml # Configuration template
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+├── .gitignore                 # Git ignore rules
+└── docs/
+    ├── QUICKSTART.md          # 5-minute setup guide
+    ├── INSTALLATION.md        # Detailed installation
+    ├── WEB_SCREENSHOT_README.md # Complete reference
+    ├── UPDATES.md             # Recent changes
+    └── QUALITY_REPORT.md      # Code quality audit
+```
 
 ## ✨ Features
 
@@ -87,38 +67,15 @@ with WebScreenShot() as shot:
 ✅ Context manager support
 ✅ Verbose logging
 
-## 🔍 Choose Your Path
+## 🚀 Getting Started
 
-### I want to...
+**First time?** → Start with [QUICKSTART.md](docs/QUICKSTART.md) (5 minutes)
 
-#### ...get started quickly
-→ Read [QUICKSTART.md](QUICKSTART.md)
+**Need help installing?** → See [INSTALLATION.md](docs/INSTALLATION.md) (step-by-step)
 
-#### ...install WebScreenShot
-→ Read [INSTALLATION.md](INSTALLATION.md)
+**Want all details?** → Read [WEB_SCREENSHOT_README.md](docs/WEB_SCREENSHOT_README.md) (complete reference)
 
-#### ...understand all features
-→ Read [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md)
-
-#### ...see what changed
-→ Read [UPDATES.md](UPDATES.md)
-
-#### ...use the CLI
-```bash
-python web_screenshot.py --help
-```
-
-#### ...use it in Python code
-See examples in [QUICKSTART.md](QUICKSTART.md) or run:
-```bash
-python web_screenshot_example.py
-```
-
-#### ...troubleshoot issues
-Check the troubleshooting sections in:
-- [QUICKSTART.md](QUICKSTART.md#5-troubleshooting)
-- [INSTALLATION.md](INSTALLATION.md#troubleshooting)
-- [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md#troubleshooting)
+**Looking for what changed?** → Check [UPDATES.md](docs/UPDATES.md) (recent fixes)
 
 ## ✅ Recent Improvements
 
@@ -135,7 +92,7 @@ Check the troubleshooting sections in:
 - ✅ Fixed asyncio event loop conflicts with multiple captures
 - ✅ Fixed Playwright 1.40.0 compatibility issues on macOS
 
-See [UPDATES.md](UPDATES.md) for complete details.
+See [UPDATES.md](docs/UPDATES.md) for complete details.
 
 ## 🧪 Testing Status
 
@@ -153,27 +110,35 @@ All tests passing:
 - **OS:** macOS 11+, Linux (Ubuntu 18+), Windows 10+
 - **Disk:** 500 MB (for Playwright browsers)
 
-## 🎯 Next Steps
+## 💡 Quick Command Reference
 
-1. **New user?** Start with [QUICKSTART.md](QUICKSTART.md)
-2. **Need to install?** Go to [INSTALLATION.md](INSTALLATION.md)
-3. **Want all details?** Read [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md)
-4. **Check recent changes?** See [UPDATES.md](UPDATES.md)
+```bash
+# Basic screenshot
+python web_screenshot.py --url https://example.com -o out.png
 
-## 📞 Support
+# Full page (auto-adjusted viewport)
+python web_screenshot.py --url https://example.com --full-page -o full.png
 
-For help:
-1. Check the relevant troubleshooting section in the docs
-2. Review [INSTALLATION.md](INSTALLATION.md#troubleshooting) for common issues
-3. See [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md#troubleshooting) for advanced issues
+# Multi-page capture
+python web_screenshot.py --url https://example.com --multi-page -o pages/
+```
+
+For more options: `python web_screenshot.py --help`
+
+## 📞 Need Help?
+
+- **Installation issues?** → [INSTALLATION.md](docs/INSTALLATION.md#troubleshooting)
+- **How to use?** → [QUICKSTART.md](docs/QUICKSTART.md)
+- **Advanced usage?** → [WEB_SCREENSHOT_README.md](docs/WEB_SCREENSHOT_README.md)
+- **What changed?** → [UPDATES.md](docs/UPDATES.md)
 
 ## 📄 License
 
-MIT License - See [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md#license)
+MIT License - See [WEB_SCREENSHOT_README.md](docs/WEB_SCREENSHOT_README.md#license)
 
 ## 🤝 Contributing
 
-Contributions welcome! See [WEB_SCREENSHOT_README.md](WEB_SCREENSHOT_README.md#contributing)
+Contributions welcome! See [WEB_SCREENSHOT_README.md](docs/WEB_SCREENSHOT_README.md#contributing)
 
 ---
 
